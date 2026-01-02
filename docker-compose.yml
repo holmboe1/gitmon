@@ -1,4 +1,41 @@
 version: "3.8"
+
 services:
-  test:
-    image: nginx:alpine
+  prometheus:
+    image: prom/prometheus:latest
+    user: "0:0"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+    volumes:
+      - /mnt/cephfs/prometheus:/prometheus
+      - /mnt/cephfs/prometheus-config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - monitoring
+    ports:
+      - "9090:9090"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  grafana:
+    image: grafana/grafana:latest
+    user: "0"
+    volumes:
+      - /mnt/cephfs/grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=SvaneveienNR1
+    networks:
+      - monitoring
+    ports:
+      - "3000:3000"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+networks:
+  monitoring:
+    driver: overlay
