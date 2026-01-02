@@ -18,13 +18,14 @@ services:
         condition: on-failure
 
 
-  grafana:
+ grafana:
     image: grafana/grafana:latest
+    user: "0"
     volumes:
       - /mnt/cephfs/grafana:/var/lib/grafana
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=SvaneveienNR1
+      - GF_SECURITY_ADMIN_USER=<bruker>
+      - GF_SECURITY_ADMIN_PASSWORD=<passord>
     networks:
       - monitoring
     ports:
