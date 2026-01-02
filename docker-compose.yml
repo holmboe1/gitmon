@@ -5,9 +5,10 @@ services:
     image: prom/prometheus:latest
     command:
       - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
     volumes:
-      - prometheus-data:/prometheus
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - /mnt/cephfs/prometheus:/prometheus
+      - /mnt/cephfs/prometheus-config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     networks:
       - monitoring
     deploy:
@@ -18,10 +19,10 @@ services:
   grafana:
     image: grafana/grafana:latest
     volumes:
-      - grafana-data:/var/lib/grafana
+      - /mnt/cephfs/grafana:/var/lib/grafana
     environment:
       - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_PASSWORD=SvaneveienNR1
     networks:
       - monitoring
     ports:
@@ -35,6 +36,3 @@ networks:
   monitoring:
     driver: overlay
 
-volumes:
-  prometheus-data:
-  grafana-data:
