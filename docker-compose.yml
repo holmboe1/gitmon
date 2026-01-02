@@ -12,6 +12,8 @@ services:
       - /mnt/cephfs/prometheus-config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     networks:
       - monitoring
+    ports:
+      - "9090:9090"
     deploy:
       replicas: 1
       restart_policy:
